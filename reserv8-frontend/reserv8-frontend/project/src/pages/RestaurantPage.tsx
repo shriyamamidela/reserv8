@@ -37,7 +37,7 @@ function RestaurantPage() {
     const fetchRestaurantData = async () => {
       try {
         console.log('Fetching restaurant with ID:', restaurantId);
-        const response = await fetch(`http://localhost:5001/restaurants/${restaurantId}`);
+        const response = await fetch(`http://localhost:5000/restaurants/${restaurantId}`);
         if (!response.ok) {
           throw new Error('Restaurant not found');
         }

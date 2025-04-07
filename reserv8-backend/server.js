@@ -42,7 +42,7 @@ console.log("Database Configuration:", {
 
 // Simple CORS configuration
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'],
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
@@ -231,25 +231,19 @@ app.get('/restaurants/location/:location', (req, res) => {
     console.log(`📢 Searching restaurants in location: ${location}`);
 
     const query = "SELECT * FROM restaurants WHERE Address LIKE ?";
-    const searchPattern = `%${location}%`;
-    
-    db.query(query, [searchPattern], (err, result) => {
+    console.log("Executing query:", query);
+    console.log("Search parameter:", `%${location}%`);
+
+    db.query(query, [`%${location}%`], (err, result) => {
         if (err) {
             console.error('❌ Error fetching restaurants by location:', err);
             res.status(500).json({ error: "Database error", details: err.message });
+        } else if (result.length === 0) {
+            console.log(`⚠️ No restaurants found in location: ${location}`);
+            res.status(404).json({ message: `No restaurants found in location: ${location}` });
         } else {
-            // Transform the data to match frontend expectations
-            const transformedResults = result.map(restaurant => ({
-                Name: restaurant.Name,
-                Links: restaurant.Links,
-                Cost: restaurant.Cost,
-                Cuisines: restaurant.Cuisines || 'Various',
-                Address: restaurant.Address,
-                Rating: restaurant.Rating,
-                Collections: restaurant.Collections
-            }));
             console.log(`✅ Found ${result.length} restaurants in ${location}`);
-            res.json(transformedResults);
+            res.json(result);
         }
     });
 });

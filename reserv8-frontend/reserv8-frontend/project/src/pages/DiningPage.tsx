@@ -23,7 +23,7 @@ function DiningPage() {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch('http://localhost:5001/restaurants');
+        const response = await fetch('http://localhost:5000/restaurants');
         const data = await response.json();
         console.log('Fetched restaurants:', data);
         setRestaurants(data);

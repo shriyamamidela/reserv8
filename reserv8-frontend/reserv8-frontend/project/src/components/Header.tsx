@@ -7,7 +7,7 @@ interface Restaurant {
   name: string;
   cuisines: string;
   address: string;
-  rating: number | string;
+  rating: number;
   price_range?: string;
   description?: string;
   image?: string;
@@ -48,7 +48,7 @@ export default function Header({ bgColor = 'bg-transparent' }: HeaderProps) {
       // Search across all three endpoints
       const searchPromises = [
         // Search by cuisine
-        fetch(`http://localhost:5001/restaurants/cuisine/${encodeURIComponent(searchQuery)}`, {
+        fetch(`http://localhost:5000/restaurants/cuisine/${encodeURIComponent(searchQuery)}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -57,7 +57,7 @@ export default function Header({ bgColor = 'bg-transparent' }: HeaderProps) {
           mode: 'cors'
         }),
         // Search by name
-        fetch(`http://localhost:5001/restaurants/name/${encodeURIComponent(searchQuery)}`, {
+        fetch(`http://localhost:5000/restaurants/name/${encodeURIComponent(searchQuery)}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -66,7 +66,7 @@ export default function Header({ bgColor = 'bg-transparent' }: HeaderProps) {
           mode: 'cors'
         }),
         // Search by location
-        fetch(`http://localhost:5001/restaurants/location/${encodeURIComponent(searchQuery)}`, {
+        fetch(`http://localhost:5000/restaurants/location/${encodeURIComponent(searchQuery)}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -81,26 +81,22 @@ export default function Header({ bgColor = 'bg-transparent' }: HeaderProps) {
 
       // Process each response
       for (const response of responses) {
-        if (response.status === 'fulfilled') {
-          try {
-            const data = await response.value.json();
-            if (Array.isArray(data)) {
-              data.forEach(restaurant => {
-                if (restaurant && restaurant.Name) {
-                  allResults.add(JSON.stringify({
-                    id: restaurant.Links?.split('/').pop() || String(Math.random()),
-                    name: restaurant.Name,
-                    cuisines: restaurant.Cuisines || 'Various',
-                    address: restaurant.Address || 'Gachibowli, Hyderabad',
-                    rating: typeof restaurant.Rating === 'number' ? restaurant.Rating : 'N/A',
-                    price_range: `₹${restaurant.Cost || 'N/A'} for two`,
-                    description: restaurant.Collections || ''
-                  }));
-                }
-              });
-            }
-          } catch (err) {
-            console.error('Error processing response:', err);
+        if (response.status === 'fulfilled' && response.value.ok) {
+          const data = await response.value.json();
+          if (Array.isArray(data)) {
+            data.forEach(restaurant => {
+              if (restaurant && restaurant.Name && restaurant.Cuisines) {
+                allResults.add(JSON.stringify({
+                  id: restaurant.Links?.split('/').pop() || String(Math.random()),
+                  name: restaurant.Name,
+                  cuisines: restaurant.Cuisines,
+                  address: restaurant.Address || 'Gachibowli, Hyderabad',
+                  rating: restaurant.Rating || 'N/A',
+                  price_range: `₹${restaurant.Cost || 'N/A'} for two`,
+                  description: restaurant.Collections
+                }));
+              }
+            });
           }
         }
       }
@@ -260,7 +256,7 @@ export default function Header({ bgColor = 'bg-transparent' }: HeaderProps) {
                         </div>
                         <div className="flex items-center ml-4">
                           <span className="text-yellow-500">★</span>
-                          <span className="ml-1 text-sm text-gray-600">{restaurant.rating}</span>
+                          <span className="ml-1 text-sm text-gray-600">{restaurant.rating || 'N/A'}</span>
                         </div>
                       </div>
                     </Link>

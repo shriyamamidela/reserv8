@@ -8,7 +8,7 @@ function App() {
 
   // 1️⃣ Fetch All Restaurants when the component loads
   useEffect(() => {
-    fetch("http://localhost:5001/restaurants")
+    fetch("http://localhost:5000/restaurants")
       .then(response => response.json())
       .then(data => {
         console.log("✅ All Restaurants Data:", data); // Debugging
@@ -26,7 +26,7 @@ function App() {
     console.log("Searching for:", searchQuery);
 
     try {
-      const url = `http://localhost:5001/restaurants/cuisine/${searchQuery}`;
+      const url = `http://localhost:5000/restaurants/cuisine/${searchQuery}`;
       console.log("Fetching from URL:", url);
       
       const response = await fetch(url);
@@ -58,7 +58,7 @@ function App() {
   // 2️⃣ Fetch Restaurants by Location
   const fetchRestaurantsByLocation = () => {
     if (!location) return;
-    fetch(`http://localhost:5001/restaurants/location/${location}`)
+    fetch(`http://localhost:5000/restaurants/location/${location}`)
       .then(response => response.json())
       .then(data => {
         console.log(`✅ Restaurants at ${location}:`, data);
@@ -70,7 +70,7 @@ function App() {
   // 3️⃣ Fetch Restaurants by Cuisine
   const fetchRestaurantsByCuisine = () => {
     if (!searchQuery) return;
-    fetch(`http://localhost:5001/restaurants/cuisine/${searchQuery}`)
+    fetch(`http://localhost:5000/restaurants/cuisine/${searchQuery}`)
       .then(response => response.json())
       .then(data => {
         console.log(`✅ Restaurants serving ${searchQuery}:`, data);
