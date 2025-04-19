@@ -1,9 +1,20 @@
-# secrets
-.env
+
+# Ignore Firebase credentials
 firebaseServiceAccount.json
+firebase-keys/
+*.key
+*.pem
 
-# node dependencies
+# Node dependencies
 node_modules/
+.env
 
-# macOS system files
+# Mac system files
 .DS_Store
+
+# Logs
+*.log
+
+# Python/Jupyter stuff
+__pycache__/
+*.ipynb_checkpoints
