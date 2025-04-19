@@ -1,0 +1,9 @@
+# secrets
+.env
+firebaseServiceAccount.json
+
+# node dependencies
+node_modules/
+
+# macOS system files
+.DS_Store
