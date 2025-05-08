@@ -53,4 +53,8 @@ firebase-debug.log
 .firebase/
 firebase-debug.*.log
 .firebaserc
-firebase.json 
+firebase.json
+**/src/config/firebase.ts
+**/firebase-config.js
+**/firebaseServiceAccount.json
+**/service-account-key.json 
